@@ -1,22 +1,29 @@
 <template>
-    <table class="table table-striped">
+    <div>
+      <table class="table table-striped">
         <thead>
-            <tr>
-                <th>ID utilisateur</th>
-                <th>Nom</th>
-                <th>Prenom</th>
-                <th>Date de naissance</th>
-                <th>Telephone</th>
-                <th>Email</th>
-            </tr>
+          <tr>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Telephone</th>
+            <th>Email</th>
+            <th>Action</th>
+          </tr>
         </thead>
         <tbody>
-            <Utilisateur v-for="user in utilisateurs.Utilisateurs" :key="user.id" :utilisateur="user"
-                @supprimer="supprimer" />
+          <Utilisateur
+            v-for="user in utilisateurs.Utilisateurs"
+            :key="user.id"
+            :utilisateur="user"
+            @supprimer="supprimer"
+          />
         </tbody>
-    </table>
-    <button class="btn btn-primary" @click="allerAJouterUtilisateur">Ajouter un utilisateur</button>
-</template>
+      </table>
+      <button class="btn btn-primary" @click="allerAJouterUtilisateur">
+        Ajouter un utilisateur
+      </button>
+    </div>
+  </template>
 
 <script setup>
 import { ref, reactive, onBeforeMount, defineProps } from 'vue';
@@ -72,4 +79,43 @@ const allerAJouterUtilisateur = () => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+  
+  .table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+  }
+
+  .table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  .table tbody + tbody {
+    border-top: 2px solid #dee2e6;
+  }
+
+  /* Button Styles */
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+
+  /* Additional Styles for Action Column */
+  .action-column {
+    text-align: center;
+  }  
+</style>

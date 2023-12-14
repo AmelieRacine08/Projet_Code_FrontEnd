@@ -21,46 +21,31 @@
                 <label for="naissance" class="form-label">Date de naissance</label>
                 <input :style="{ border: errors.dateNaissance ? '2px red solid' : '' }" v-model="utilisateur.dateNaissance"
                     @input="validerDateNaissance" type="date" class="form-control" id="naissance" style="width: 40vw;" />
-                <div class="text-danger pb-2" v-if="errors.dateNaissance">{{ errors.dateNaissance }}</div>
+                <div class="text-danger pb-2" v-if="errors.dateNaissance && dateNaissanceValid">
+                    {{ errors.dateNaissance }}
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="telephone" class="form-label">Telephone</label>
-                <input :style="{ border: errors.numeroTelephone ? '2px red solid' : '' }" v-model="utilisateur.numeroTelephone"
-                    @input="validerTelephone" type="tel" class="form-control" id="telephone" style="width: 40vw;">
-                <div class="text-danger pb-2" v-if="errors.numeroTelephone">{{ errors.numeroTelephone }}</div>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input :style="{ border: errors.email ? '2px red solid' : '' }" v-model="utilisateur.email" type="email"
-                    class="form-control" id="email" style="width: 40vw;">
-                <div class="text-danger pb-2" v-if="errors.email">{{ errors.email }}</div>
-            </div>
-            <div class="mb-3">
-                <label for="mdp" class="form-label">Mot de passe</label>
-                <input :style="{ border: errors.motPasse ? '2px red solid' : '' }" v-model="utilisateur.motPasse"
-                    type="password" class="form-control" id="mdp" style="width: 40vw;">
-                <div class="text-danger pb-2" v-if="errors.motPasse">{{ errors.motPasse }}</div>
-            </div>
-            <div class="mb-3">
-                <label for="role" class="form-label">Role</label>
-                <select :style="{ border: errors.role ? '2px red solid' : '' }" v-model="utilisateur.role"
-                    class="form-control" id="role" style="width: 40vw;">
-                    <option value="" disabled selected>Sélectionnez un rôle</option>
-                    <option v-for="role in rolesFromDatabase" :key="role.id" :value="role.id">{{ role.categorie }}</option>
-                </select>
-                <div class="text-danger pb-2" v-if="errors.role">{{ errors.role }}</div>
+                <div class="mb-3">
+                    <label for="telephone" class="form-label">Telephone</label>
+                    <input :style="{ border: errors.numeroTelephone ? '2px red solid' : '' }"
+                        v-model="utilisateur.numeroTelephone" @input="validerTelephone" type="tel" class="form-control"
+                        id="telephone" style="width: 40vw;">
+                    <div class="text-danger pb-2" v-if="errors.numeroTelephone">{{ errors.numeroTelephone }}</div>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input :style="{ border: errors.email ? '2px red solid' : '' }" v-model="utilisateur.email" type="email"
+                        class="form-control" id="email" style="width: 40vw;">
+                    <div class="text-danger pb-2" v-if="errors.email">{{ errors.email }}</div>
+                </div>
+                <div class="mb-3">
+                    <label for="mdp" class="form-label">Mot de passe</label>
+                    <input :style="{ border: errors.motPasse ? '2px red solid' : '' }" v-model="utilisateur.motPasse"
+                        type="password" class="form-control" id="mdp" style="width: 40vw;">
+                    <div class="text-danger pb-2" v-if="errors.motPasse">{{ errors.motPasse }}</div>
+                </div>
 
-            </div>
-            <div class="mb-3">
-                <label for="programme" class="form-label">Programme</label>
-                <select v-model="utilisateur.programme" class="form-control" id="programme" style="width: 40vw;">
-                    <option value="" disabled selected>Sélectionnez un programme</option>
-                    <option v-for="programme in programmesFromDatabase" :key="programme.id" :value="programme.id">{{
-                        programme.nom_du_programme }}</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary" @click="soumettre">Ajouter</button>
+                <button type="submit" class="btn btn-primary" @click="soumettre">Ajouter</button>
         </form>
     </div>
 </template>
@@ -69,18 +54,11 @@
 import { ref, reactive, onMounted, watchEffect, onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 import useUtilisateur from '../../services/serviceUtilisateur';
-import useRole from '../../services/serviceRole';
-import useProgramme from '../../services/serviceProgramme';
 import axios from 'axios';
 
+const dateNaissanceValid = ref(true);
 const router = useRouter()
 const { ajouterUtilisateur } = useUtilisateur()
-const { listeRoles } = useRole();
-const { listeProgrammes } = useProgramme();
-
-
-const rolesFromDatabase = ref([]); 
-const programmesFromDatabase = ref([]); 
 
 const utilisateur = ref({
     photo: '',
@@ -89,9 +67,7 @@ const utilisateur = ref({
     dateNaissance: '',
     numeroTelephone: '',
     email: '',
-    motPasse: '',
-    role: '',
-    programme: ''
+    motPasse: ''
 })
 
 // Variable pour stocker les erreurs de validations des champs
@@ -101,21 +77,28 @@ const errors = ref({
     dateNaissance: '',
     numeroTelephone: '',
     email: '',
-    motPasse: '',
-    role: '',
-    programme: ''
+    motPasse: ''
 })
 
 const soumettre = () => {
 
-    console.log('utilisateur', utilisateur.value)
+    console.log('utilisateur', utilisateur)
 
-    //Ne pas soumettre le formulaire si tous les champs (sauf programme) ne sont pas valides
-    if (!valider(utilisateur.value, { excludeProgramme: true })) return
+    //Ne pas soumettre le formulaire si tous les champs ne sont pas valides
+    if (!valider(utilisateur.value, { excludeProgramme: true }) || !dateNaissanceValid.value) return;
 
     ajouterUtilisateur(utilisateur.value).then(() => {
+        utilisateur.value = {
+            photo: '',
+            nom: '',
+            prenom: '',
+            dateNaissance: '',
+            numeroTelephone: '',
+            email: '',
+            motPasse: '',
+        };
 
-        router.push('/utilisateurs/ajout')
+        router.push('/utilisateurs')
     }).catch(err => {
         console.log("Probleme lors de l'ajout de l'utilisateur", err)
 
@@ -150,22 +133,6 @@ const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const nomRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s]{4,}$/;
 const telephoneRegex = /^[0-9]{10}$/;
 
-const validerDateNaissance = () => {
-    if (utilisateur.dateNaissance) {
-        const dateParties = utilisateur.dateNaissance.split('-');
-        const formatDate = `${dateParties[1]}/${dateParties[2]}/${dateParties[0]}`;
-
-
-        const regexDate = /^\d{2}\/\d{2}\/\d{4}$/;
-        if (!regexDate.test(formatDate) || isNaN(new Date(formatDate))) {
-            errors.dateNaissance = 'Date de naissance invalide';
-        } else {
-            errors.dateNaissance = '';
-        }
-    } else {
-        errors.dateNaissance = "Date de naissance manquante";
-    }
-};
 
 //Fonction pour verifier que tout le formulaire est valide
 const valider = utilisateur => {
@@ -251,16 +218,15 @@ watchEffect(() => {
     if (utilisateur.value.email !== '' && !emailRegex.test(utilisateur.value.email)) {
         errors.value.email = "L'email doit contenir un @ et un .adresse";
         return;
-    }
-    validerDateNaissance();
+    }    
 });
 
 
 
 // Fonction pour charger les rôles depuis la base de données
-const chargerRoles = async () => {
+/*const chargerRoles = async () => {
     try {
-        const roles = await listeRoles();        
+        const roles = await listeRoles();
          rolesFromDatabase.value = roles;
          console.log('Roles fetched:', roles);
     } catch (error) {
@@ -271,19 +237,19 @@ const chargerRoles = async () => {
 // Fonction pour charger les programmes depuis la base de données
 const chargerProgrammes = async () => {
     try {
-        const programmes = await listeProgrammes();        
+        const programmes = await listeProgrammes();
         programmesFromDatabase.value = programmes
         console.log('Programmes fetched:', programmes);
 
     } catch (error) {
         console.error('Erreur lors du chargement des programmes', error);
     }
-};
-onBeforeMount(async()=>{
+};*/
+/*onBeforeMount(async()=>{
     await chargerRoles();
     await chargerProgrammes();
 
-})
+})*/
 
 // Charger les données au moment du montage du composant
 /*onMounted(async () => {

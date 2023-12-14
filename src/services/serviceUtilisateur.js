@@ -23,20 +23,10 @@ const useUtilisateur = () => {
     }
 
     const ajouterUtilisateur = async (utilisateur) => {
-        try {
-
-            const roleDetail = await frontAPI.get(`/roles/${utilisateur.roles}`)
-            const utilisateurPayload = {
-                ...utilisateur,
-                roles: roleDetail.data
-            };
-
-            const resultat = await frontAPI.post(`/utilisateurs/ajout`, utilisateurPayload)
-            return resultat.data
-        }
-        catch (error) {
-            throw error;
-        }
+        const resultat = await frontAPI.post(`/utilisateurs`, utilisateur)
+       
+        return resultat.data.data
+        
     }
 
     const getUtilisateurById = async (id) => {
