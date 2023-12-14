@@ -1,19 +1,6 @@
 <template>
     <div class="form">
         <form @submit.prevent="mettreAJour">
-            <div class="row mb-2">
-                <label for="userId" class="col-md-2" style="white-space: nowrap;">Entrez l'ID du cours à
-                    rechercher:</label>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-6">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                </div>
-                <div class="col-md-4">
-                    <button @click="rechercherProfil" class="btn btn-primary" >Rechercher</button>
-                </div>
-            </div>
-
             <div class="mb-3">
                 <label for="nom_du_cours" class="form-label">Nom du cours</label>
                 <input :style="{ border: error.nom_du_cours ? '2px solid red' : '', outline: 'none' }"

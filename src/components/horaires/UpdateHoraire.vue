@@ -1,19 +1,6 @@
 <template>
     <div class="form">
         <form @submit.prevent="mettreAJour">
-            <div class="row mb-2">
-                <label for="userId" class="col-md-2" style="white-space: nowrap;">Entrez l'ID de l'horaire à
-                    rechercher:</label>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-6">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                </div>
-                <div class="col-md-4">
-                    <button @click="rechercherProfil" class="btn btn-primary" >Rechercher</button>
-                </div>
-            </div>
-
             <div class="mb-3">
                 <label for="jourDeSemaine" class="form-label">Jour de la semaine</label>
                 <select v-model="horaire.jourDeSemaine" type="text" class="form-control" id="jourDeSemaine">

@@ -1,23 +1,6 @@
 <template>
     <div class="form">
         <form @submit.prevent="mettreAJour">
-            <div class="row mb-2">
-                <label for="userId" class="col-md-2" style="white-space: nowrap;">Entrez l'ID d bulletin à
-                    rechercher:</label>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-6">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                </div>
-                <div class="col-md-4">
-                    <button @click="rechercherProfil" class="btn btn-primary" >Rechercher</button>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="idBulletin" class="form-label" id="label-id-bulletin">ID du Bulletin</label>
-                <input type="text" class="form-control" v-model="id" id="idBulletin" required>
-            </div>
             <div class="mb-3">
                 <label for="moyenne" class="form-label" id="label-moyenne">Moyenne</label>
                 <input :style="{ border: error.moyenne ? '2px solid red' : '', outline: 'none' }" type="text"
