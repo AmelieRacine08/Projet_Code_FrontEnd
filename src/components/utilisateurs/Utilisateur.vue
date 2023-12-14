@@ -1,18 +1,13 @@
 <template>
     <tr>
-        <td>
-            {{ utilisateur.id }}<!--La photo on va juste la montrer dans le detail de l'utilisateur dans un div au top de la page -->
-        </td>
+       
         
         <td>
             {{ utilisateur.nom }}
         </td>
         <td>
             {{ utilisateur.prenom }}
-        </td>
-        <td>
-            {{ utilisateur.dateNaissance }}
-        </td>
+        </td>        
         <td>
             {{ utilisateur.numeroTelephone }}
         </td>
@@ -68,6 +63,23 @@ const allerAMiseAJour=()=>{
     
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+.action-column {
+    text-align: center;
+  }
+
+  .action-column .btn {
+    margin-right: 5px; 
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+  }
 
 </style>

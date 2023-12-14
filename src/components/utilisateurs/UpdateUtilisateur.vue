@@ -25,9 +25,9 @@
             </div>
             <div class="mb-3">
                 <label for="telephone" class="form-label">Telephone</label>
-                <input :style="{ border: errors.telephone ? '2px red solid' : '' }" v-model="utilisateur.telephone"
+                <input :style="{ border: errors.numeroTelephone ? '2px red solid' : '' }" v-model="utilisateur.numeroTelephone"
                     @input="validerTelephone" type="tel" class="form-control" id="telephone">
-                <div class="text-danger pb-2" v-if="errors.telephone">{{ errors.telephone }}</div>
+                <div class="text-danger pb-2" v-if="errors.numeroTelephone">{{ errors.numeroTelephone }}</div>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
@@ -40,23 +40,7 @@
                 <input :style="{ border: errors.motPasse ? '2px red solid' : '' }" v-model="utilisateur.motPasse"
                     type="password" class="form-control" id="mdp">
                 <div class="text-danger pb-2" v-if="errors.motPasse">{{ errors.motPasse }}</div>
-            </div>
-            <div class="mb-3">
-                <label for="role" class="form-label">Role</label>
-                <select :style="{ border: errors.role ? '2px red solid' : '' }" v-model="utilisateur.role" class="form-control" id="role" style="width: 40vw;">
-                    <option value="" disabled selected>Sélectionnez un rôle</option>
-                    <option v-for="role in rolesFromDatabase" :key="role.id" :value="role.id">{{ role.nom }}</option>
-                </select>
-                <div class="text-danger pb-2" v-if="errors.role">{{ errors.role }}</div>
-            </div>
-            <div class="mb-3">
-                <label for="programme" class="form-label">Programme</label>
-                <select :style="{ border: errors.programme ? '2px red solid' : '' }" v-model="utilisateur.programme" class="form-control" id="programme" style="width: 40vw;">
-                    <option value="" disabled selected>Sélectionnez un programme</option>
-                    <option v-for="programme in programmesFromDatabase" :key="programme.id" :value="programme.id">{{ programme.nom }}</option>
-                </select>
-                <div class="text-danger pb-2" v-if="errors.role">{{ errors.role }}</div>
-            </div>
+            </div>            
             <button type="submit" class="btn btn-primary" @click="mettreAJour">Modifier</button>
         </form>
     </div>
@@ -76,10 +60,10 @@ const utilisateur = ref({})
 const errors = ref({
     nom: '',
     prenom: '',
-    dateDeNaissance: '',
-    telephone:'',
+    dateNaissance: '',
+    numeroTelephone:'',
     email: '',
-    motDePasse: ''
+    motPasse: ''
 })
 
 import useUtilisateur from '../../services/serviceUtilisateur';
@@ -152,7 +136,7 @@ const valider = utilisateur => {
         validerChamp(champ, utilisateur)
     }
 
-    if (!mdpRegex.test(utilisateur.motPasse) || !emailRegex.test(utilisateur.email) || !nomRegex.test(utilisateur.nom) || !nomRegex.test(utilisateur.prenom) || !telephoneRegex.test(utilisateur.telephone)) {
+    if (!mdpRegex.test(utilisateur.motPasse) || !emailRegex.test(utilisateur.email) || !nomRegex.test(utilisateur.nom) || !nomRegex.test(utilisateur.prenom) || !telephoneRegex.test(utilisateur.numeroTelephone)) {
         return false
     }
     return true
@@ -171,7 +155,7 @@ const validerChamp = (champ, utilisateur) => {
                 errors.value[champ] = `Le mot de passe est invalide !`
             }
             break
-        case 'telephone':
+        case 'numeroTelephone':
             if (!telephoneRegex.test(utilisateur[champ])) {
                 errors.value[champ] = "Le numéro de téléphone est invalide !"
             }
@@ -203,9 +187,9 @@ watchEffect(() => {
         errors.value.prenom = "Le prénom doit être d'une taille minimum de 4 lettres";
         return;
     }
-    errors.value.telephone = '';
-    if(utilisateur.value.telephone !== '' && !telephoneRegex.test(utilisateur.value.telephone)){
-        errors.value.telephone = "Le numéro de téléphone doit être d'une longueur de 10 chiffres"
+    errors.value.numeroTelephone = '';
+    if(utilisateur.value.numeroTelephone !== '' && !telephoneRegex.test(utilisateur.value.numeroTelephone)){
+        errors.value.numeroTelephone = "Le numéro de téléphone doit être d'une longueur de 10 chiffres"
         return
     }   
     errors.value.motPasse = '';
